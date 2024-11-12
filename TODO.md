@@ -1,6 +1,6 @@
 # Task/Todo app
 
-- [] Project setup
+- [x] Project setup
 - [] Create tasks
 - [] Database Schema (SQLITE)
 - [] Entities
