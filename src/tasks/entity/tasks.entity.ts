@@ -9,7 +9,7 @@ export class Task {
   title: string;
 
   @Column()
-  isCompleted: string;
+  isCompleted: boolean;
 
   @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

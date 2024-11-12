@@ -10,9 +10,9 @@ export class TasksService {
     @InjectRepository(Task) private readonly taskRepository: Repository<Task>,
   ) {}
 
-  createTask(task: CreateTaskDto) {
+  createTask(task: CreateTaskDto): Task {
     // Create task database
-    const newTask = this.taskRepository.create(task);
+    const newTask = this.taskRepository.create({ ...task });
     return newTask;
   }
 
