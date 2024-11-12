@@ -1,5 +1,15 @@
-import { Controller, Delete, Get, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { TasksService } from './tasks.service';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { Task } from './entity/tasks.entity';
 
 @Controller('tasks')
 export class TasksController {
@@ -7,23 +17,23 @@ export class TasksController {
 
   // GET tasks
   @Get()
-  findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc'): string {
+  async findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc'): Promise<Task[]> {
     return this.tasksService.getTasks();
   }
 
   // POST tasks
-  @Post(':id')
-  createTask(): string {
-    return this.tasksService.createTask();
+  @Post()
+  async createTask(@Body() newTask: CreateTaskDto) {
+    return this.tasksService.createTask(newTask);
   }
   // PATCH tasks
-  @Patch()
+  @Patch(':id')
   updateTask(): string {
     return this.tasksService.updateTask();
   }
 
   // DELETE tasks
-  @Delete()
+  @Delete(':id')
   deleteTask(): string {
     return this.tasksService.deleteTask();
   }
