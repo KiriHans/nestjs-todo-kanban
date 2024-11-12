@@ -1,7 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { Task } from './entity/tasks.entity';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class TasksService {
+  constructor(
+    @InjectRepository(Task) private readonly taskRepository: Repository<Task>,
+  ) {}
+
   createTask() {
     // Create task database
     return 'Task created';
