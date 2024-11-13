@@ -1,8 +1,10 @@
-import { OmitType } from '@nestjs/mapped-types';
-import { Task } from '../entity/tasks.entity';
+import { IsBoolean, IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateTaskDto {
+  @IsString()
+  @IsNotEmpty()
   title: string;
+
+  @IsBoolean()
   isCompleted: boolean;
-  createdAt: Date;
 }

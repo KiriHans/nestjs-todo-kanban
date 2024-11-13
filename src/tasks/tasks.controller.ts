@@ -6,6 +6,7 @@ import {
   Patch,
   Post,
   Query,
+  ValidationPipe,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -17,13 +18,13 @@ export class TasksController {
 
   // GET tasks
   @Get()
-  async findAll(@Query('sort') sort: 'asc' | 'desc' = 'desc'): Promise<Task[]> {
+  async findAll(): Promise<Task[]> {
     return this.tasksService.getTasks();
   }
 
   // POST tasks
   @Post()
-  async createTask(@Body() newTask: CreateTaskDto) {
+  async createTask(@Body(ValidationPipe) newTask: CreateTaskDto) {
     return this.tasksService.createTask(newTask);
   }
   // PATCH tasks

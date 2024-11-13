@@ -7,13 +7,14 @@ import { CreateTaskDto } from './dto/create-task.dto';
 @Injectable()
 export class TasksService {
   constructor(
-    @InjectRepository(Task) private readonly taskRepository: Repository<Task>,
+    @InjectRepository(Task) private taskRepository: Repository<Task>,
   ) {}
 
-  createTask(task: CreateTaskDto): Task {
+  async createTask(task: CreateTaskDto): Promise<Task> {
     // Create task database
     const newTask = this.taskRepository.create({ ...task });
-    return newTask;
+
+    return this.taskRepository.save(newTask);
   }
 
   deleteTask() {
@@ -30,8 +31,6 @@ export class TasksService {
     // Get all user tasks
     // Posible to get using filters
     // Or pagination
-    return this.taskRepository.find({
-      where: {},
-    });
+    return await this.taskRepository.find();
   }
 }
