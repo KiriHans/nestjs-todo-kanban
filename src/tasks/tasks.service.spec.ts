@@ -5,6 +5,7 @@ import { Task } from './entity/tasks.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { NotFoundException } from '@nestjs/common';
+import { generateTask } from './utils-test';
 
 const mockTestRepository = {
   create: jest.fn(),
@@ -13,22 +14,6 @@ const mockTestRepository = {
   findOne: jest.fn(),
   find: jest.fn(),
 };
-
-function generateTask({
-  title,
-  isCompleted,
-}: {
-  title: string;
-  isCompleted: boolean;
-}): Task {
-  return {
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    id: globalThis.crypto.randomUUID(),
-    title,
-    isCompleted,
-  };
-}
 
 describe('TasksService', () => {
   let service: TasksService;
