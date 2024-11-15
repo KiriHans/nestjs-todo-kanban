@@ -2,10 +2,10 @@
 
 - [x] Project setup
 - [x] Create tasks
-- [] Database Schema (SQLITE)
-- [] Entities
-- [] Update tasks
-- [] Delete tasks
+- [x] Database Schema (postgres)
+- [x] Entities
+- [x] Update tasks
+- [x] Delete tasks
 - [] Authentication (cookies)
 - [] validate requests from user
 - [] Rate-limiting

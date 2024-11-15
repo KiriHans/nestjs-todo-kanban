@@ -14,7 +14,7 @@ export function generateTask({ title, isCompleted }: CreateTaskDto): Task {
 }
 
 export function getTasksMock(length: number): Readonly<Task[]> {
-  return Array.from({ length }, (_, index) => index).map((index) =>
+  return Array.from({ length }, (_, index) =>
     generateTask({
       title: `Test Title ${index}`,
       isCompleted: Math.floor(Math.random() * 2) === 0,
