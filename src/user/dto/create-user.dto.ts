@@ -11,5 +11,5 @@ export class CreateUserDto {
 
   @IsNotEmpty()
   @IsEmail()
-  emai: string;
+  email: string;
 }

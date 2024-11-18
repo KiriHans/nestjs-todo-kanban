@@ -17,7 +17,7 @@ import { AuthModule } from './auth/auth.module';
       password: '123',
       username: 'postgres',
       database: 'pgWithNest',
-      entities: [Task],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
     }),
