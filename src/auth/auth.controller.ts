@@ -6,12 +6,15 @@ import {
   HttpStatus,
   UseGuards,
   Request,
+  ClassSerializerInterceptor,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { PassportLocalGuard } from './guards/passport-local.guard';
 import { RequestWithUser } from './request-user.interface';
 import { RegisterDto } from './dto/register.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -22,7 +25,7 @@ export class AuthController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @Post('signin')
+  @Post('login')
   @UseGuards(PassportLocalGuard)
   login(@Request() req: RequestWithUser) {
     return this.authService.login(req.user);

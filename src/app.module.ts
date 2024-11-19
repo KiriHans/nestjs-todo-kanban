@@ -4,10 +4,11 @@ import { AppService } from './app.service';
 import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import Joi from 'joi';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import jwtConfig from './config/jwt.config';
+import * as Joi from 'joi';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import jwtConfig from './config/jwt.config';
       database: 'pgWithNest',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
-      logging: true,
+      // logging: true,
     }),
     ConfigModule.forRoot({
       isGlobal: true,
@@ -30,6 +31,8 @@ import jwtConfig from './config/jwt.config';
         NODE_ENV: Joi.string()
           .valid('development', 'production', 'test')
           .default('development'),
+        JWT_SECRET: Joi.string().required().not().empty(),
+        JWT_EXPIRATION_TIME: Joi.number().required().not().empty(),
       }),
     }),
     UserModule,

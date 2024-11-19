@@ -30,6 +30,8 @@ export class AuthService {
       throw new UnauthorizedException('Credentials incorrect');
     }
 
+    console.log({ user });
+
     const isPassworMatching = await argon.verify(user.password, password);
 
     if (!isPassworMatching) {
@@ -61,7 +63,7 @@ export class AuthService {
   async login(user: User) {
     const payload = { username: user.username, sub: user.id };
     return {
-      access_token: this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload),
     };
   }
 }

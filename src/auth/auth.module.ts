@@ -13,7 +13,6 @@ import jwtConfig from 'src/config/jwt.config';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Auth, User]),
-
     JwtModule.registerAsync(jwtConfig.asProvider()),
     PassportModule,
   ],
