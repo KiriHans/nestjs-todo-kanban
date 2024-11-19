@@ -66,7 +66,7 @@ export class AuthService {
     const payload: Payload = { username: user.username, sub: user.id };
     const token = await this.jwtService.signAsync(payload);
     response.cookie('authentication', token, {
-      maxAge: this.configService.get('JWT_EXPIRATION_TIME') * 1000,
+      maxAge: this.configService.get('JWT_EXPIRATION_TIME') * 1000, // JWT_EXPIRATION_TIME is in seconds, maxAge require miliseconds
       httpOnly: true,
     });
     return {
