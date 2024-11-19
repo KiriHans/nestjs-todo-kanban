@@ -8,7 +8,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import jwtConfig from './config/jwt.config';
 import * as Joi from 'joi';
-import { join } from 'path';
 
 @Module({
   imports: [

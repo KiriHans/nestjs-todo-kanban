@@ -15,12 +15,16 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginWithUsernameDto } from './dto/login-username.dto';
 import { User } from 'src/user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
+import { Payload } from './interfaces/payload-token.interface';
+import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async validateUser(username: string, password: string) {
@@ -29,8 +33,6 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Credentials incorrect');
     }
-
-    console.log({ user });
 
     const isPassworMatching = await argon.verify(user.password, password);
 
@@ -60,10 +62,15 @@ export class AuthService {
     }
   }
 
-  async login(user: User) {
-    const payload = { username: user.username, sub: user.id };
+  async login(user: User, response: Response) {
+    const payload: Payload = { username: user.username, sub: user.id };
+    const token = await this.jwtService.signAsync(payload);
+    response.cookie('authentication', token, {
+      maxAge: this.configService.get('JWT_EXPIRATION_TIME') * 1000,
+      httpOnly: true,
+    });
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: token,
     };
   }
 }

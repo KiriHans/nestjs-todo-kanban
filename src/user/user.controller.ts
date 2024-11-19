@@ -7,10 +7,11 @@ import {
   Param,
   UseInterceptors,
   ClassSerializerInterceptor,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PassportJwtGuard } from 'src/auth/guards/passport-jwt.guard';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -23,7 +24,9 @@ export class UserController {
   }
 
   @Patch(':id')
+  @UseGuards(PassportJwtGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    console.log({ updateUserDto });
     return this.userService.updateUser(id, updateUserDto);
   }
 
