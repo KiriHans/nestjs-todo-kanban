@@ -5,6 +5,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Task } from './tasks/entity/tasks.entity';
 import { ConfigModule } from '@nestjs/config';
+import Joi from 'joi';
 
 @Module({
   imports: [
@@ -20,7 +21,13 @@ import { ConfigModule } from '@nestjs/config';
       synchronize: true,
       logging: true,
     }),
-    ConfigModule.forRoot({}),
+    ConfigModule.forRoot({
+      validationSchema: Joi.object({
+        NODE_ENV: Joi.string()
+          .valid('development', 'production', 'test')
+          .default('development'),
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
