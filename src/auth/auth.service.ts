@@ -12,7 +12,6 @@ import { UserService } from 'src/user/user.service';
 import * as argon from 'argon2';
 import { PostgresErrorCode } from 'src/database/postgresErrorCodes.enum';
 import { RegisterDto } from './dto/register.dto';
-import { LoginWithUsernameDto } from './dto/login-username.dto';
 import { User } from 'src/user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { Payload } from './interfaces/payload-token.interface';

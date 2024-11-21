@@ -125,7 +125,7 @@ describe('TasksService', () => {
       expect(result).toEqual(newTask);
     });
 
-    it('Should throw an error if the task doesn not exist', async () => {
+    it('Should throw an error if the task does not exist', async () => {
       const updateTaskDto: UpdateTaskDto = {
         isCompleted: !oldTask.isCompleted,
       };

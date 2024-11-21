@@ -26,7 +26,6 @@ export class UserController {
   @Patch(':id')
   @UseGuards(PassportJwtGuard)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    console.log({ updateUserDto });
     return this.userService.updateUser(id, updateUserDto);
   }
 

@@ -1,7 +1,9 @@
 import {
+  ForbiddenException,
   HttpException,
   HttpStatus,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -9,6 +11,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { PostgresErrorCode } from 'src/database/postgresErrorCodes.enum';
 
 @Injectable()
 export class UserService {
@@ -24,12 +27,15 @@ export class UserService {
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     const user = await this.userRepository.findOne({ where: { id } });
+
     if (!user) {
       throw new NotFoundException();
     }
 
     Object.assign(user, updateUserDto);
-    return this.userRepository.save(user);
+    const updatedUser = await this.userRepository.save(user);
+
+    return updatedUser;
   }
 
   async getUsers(): Promise<User[]> {
@@ -39,19 +45,13 @@ export class UserService {
   async getUserByUsername(username: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { username } });
     if (user) return user;
-    throw new HttpException(
-      'User with this email does not exist',
-      HttpStatus.NOT_FOUND,
-    );
+    throw new NotFoundException('User with this email does not exist');
   }
 
   async getUserById(id: string) {
     const user = await this.userRepository.findOne({ where: { id } });
 
     if (user) return user;
-    throw new HttpException(
-      'User with this id does not exist',
-      HttpStatus.NOT_FOUND,
-    );
+    throw new NotFoundException('User with this id does not exist');
   }
 }
