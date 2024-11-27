@@ -29,7 +29,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   @Post('login')
   @UseGuards(PassportLocalGuard)
-  login(
+  async login(
     @Request() req: RequestWithUser,
     @Res({ passthrough: true }) res: Response,
   ) {

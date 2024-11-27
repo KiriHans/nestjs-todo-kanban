@@ -21,3 +21,20 @@ export function getUsersMock(numberUsers: number): User[] {
     }),
   );
 }
+
+export type MockUserType = {
+  getUsers: jest.Mock<any, User[], any>;
+  createUser: jest.Mock<any, any, any>;
+  updateUser: jest.Mock<any, any, any>;
+  getUserByUsername: jest.Mock<any, any, User>;
+  getUserById: jest.Mock<any, any, any>;
+};
+
+export const getMockUserService = (): Readonly<MockUserType> =>
+  ({
+    getUsers: jest.fn<any, User[]>().mockResolvedValue([...USER_LIST] as const),
+    createUser: jest.fn(),
+    updateUser: jest.fn(),
+    getUserByUsername: jest.fn(),
+    getUserById: jest.fn(),
+  }) as const;

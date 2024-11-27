@@ -1,15 +1,11 @@
 import {
-  BadRequestException,
   ForbiddenException,
-  HttpException,
-  HttpStatus,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 
 import { UserService } from 'src/user/user.service';
-import * as argon from 'argon2';
 import { PostgresErrorCode } from 'src/database/postgresErrorCodes.enum';
 import { RegisterDto } from './dto/register.dto';
 import { User } from 'src/user/entities/user.entity';
@@ -17,6 +13,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Payload } from './interfaces/payload-token.interface';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import * as argon from 'argon2';
 
 @Injectable()
 export class AuthService {

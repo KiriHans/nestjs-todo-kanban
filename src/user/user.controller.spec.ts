@@ -2,31 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { User } from './entities/user.entity';
-import { generateUser, USER_LIST } from './util-user-test';
+import {
+  generateUser,
+  getMockUserService,
+  MockUserType,
+  USER_LIST,
+} from './util-user-test';
 import { UpdateUserDto } from './dto/update-user.dto';
-
-type mockUserType = {
-  getUsers: jest.Mock<any, User[], any>;
-  createUser: jest.Mock<any, any, any>;
-  updateUser: jest.Mock<any, any, any>;
-  getUserByUsername: jest.Mock<any, any, any>;
-  getUserById: jest.Mock<any, any, any>;
-};
 
 describe('UserController', () => {
   let controller: UserController;
-  let mockUserService: mockUserType;
+  let mockUserService: MockUserType;
 
   beforeEach(async () => {
-    mockUserService = {
-      getUsers: jest
-        .fn<any, User[]>()
-        .mockResolvedValue([...USER_LIST] as const),
-      createUser: jest.fn(),
-      updateUser: jest.fn(),
-      getUserByUsername: jest.fn(),
-      getUserById: jest.fn(),
-    };
+    mockUserService = getMockUserService();
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
