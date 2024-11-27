@@ -6,6 +6,7 @@
 - [x] Entities
 - [x] Update tasks
 - [x] Delete tasks
-- [] Authentication (cookies)
+- [x] Authentication (cookies)
+- [] Add One-to-Many relationship user-task
 - [] validate requests from user
 - [] Rate-limiting
