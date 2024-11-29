@@ -74,7 +74,7 @@ describe('AuthController', () => {
       });
 
       const reqMock: RequestWithUser = {
-        user: jest.fn<any, User[]>().mockReturnValue(userTest),
+        user: { ...userTest },
       } as unknown as RequestWithUser;
 
       const resMock: Response = {} as unknown as Response;

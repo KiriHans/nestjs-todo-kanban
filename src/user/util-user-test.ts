@@ -3,12 +3,17 @@ import { User } from './entities/user.entity';
 
 export const USER_LIST: Readonly<User[]> = getUsersMock(4);
 
-export function generateUser({ email, password, username }: CreateUserDto) {
+export function generateUser({
+  email,
+  password,
+  username,
+}: CreateUserDto): User {
   return {
     id: globalThis.crypto.randomUUID(),
     email,
     password,
     username,
+    tasks: [],
   };
 }
 

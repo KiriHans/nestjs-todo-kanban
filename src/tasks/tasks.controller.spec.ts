@@ -4,8 +4,12 @@ import { TasksService } from './tasks.service';
 import { generateTask, getTasksMock } from './utils-test';
 import { Task } from './entity/tasks.entity';
 import { UpdateTaskDto } from './dto/update-task.dto';
+import { USER_LIST } from 'src/user/util-user-test';
+import { RequestWithUser } from 'src/auth/interfaces/request-user.interface';
+import { User } from 'src/user/entities/user.entity';
 
-const TASKS_LIST: Readonly<Task[]> = getTasksMock(3);
+const USER = [...USER_LIST][0];
+const TASKS_LIST: Readonly<Task[]> = getTasksMock(3, USER);
 
 const mockTasksService = {
   getTasks: jest.fn<any, Task[]>().mockResolvedValue([...TASKS_LIST] as const),
@@ -16,6 +20,7 @@ const mockTasksService = {
 
 describe('TasksController', () => {
   let controller: TasksController;
+  let reqMock: RequestWithUser;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -28,6 +33,9 @@ describe('TasksController', () => {
       ],
     }).compile();
 
+    reqMock = {
+      user: { ...USER },
+    } as unknown as RequestWithUser;
     controller = module.get<TasksController>(TasksController);
   });
 
@@ -36,11 +44,11 @@ describe('TasksController', () => {
   });
 
   it('Should findAll tasks', async () => {
-    const result = await controller.findAll();
+    const result = await controller.findAll(reqMock);
 
     expect(result).toEqual(TASKS_LIST);
 
-    expect(mockTasksService.getTasks).toHaveBeenCalled();
+    expect(mockTasksService.getTasks).toHaveBeenCalledWith(USER);
   });
 
   it('Should update task given id and body', async () => {
@@ -51,26 +59,33 @@ describe('TasksController', () => {
       },
     ];
 
-    const updatedTask = generateTask({
-      title: body.title ?? 'Old title',
-      isCompleted: body.isCompleted ?? false,
-    });
+    const updatedTask = generateTask(
+      {
+        title: body.title ?? 'Old title',
+        isCompleted: body.isCompleted ?? false,
+      },
+      USER,
+    );
 
     mockTasksService.updateTask.mockResolvedValue(updatedTask);
 
-    const result = await controller.updateTask(idTask, body);
+    const result = await controller.updateTask(idTask, body, reqMock);
 
     expect(result).toEqual(updatedTask);
 
-    expect(mockTasksService.updateTask).toHaveBeenCalledWith(idTask, body);
+    expect(mockTasksService.updateTask).toHaveBeenCalledWith(
+      idTask,
+      body,
+      USER,
+    );
   });
 
   it('Should delete tasks by id', async () => {
     const idTask = 'testID';
 
-    await controller.deleteTask(idTask);
+    await controller.deleteTask(idTask, reqMock);
 
-    expect(mockTasksService.deleteTask).toHaveBeenCalledWith(idTask);
+    expect(mockTasksService.deleteTask).toHaveBeenCalledWith(idTask, USER);
   });
 
   afterEach(() => {

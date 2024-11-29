@@ -6,6 +6,7 @@ import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { NotFoundException } from '@nestjs/common';
 import { generateTask } from './utils-test';
+import { USER_LIST } from 'src/user/util-user-test';
 
 const mockTestRepository = {
   create: jest.fn(),
@@ -14,6 +15,8 @@ const mockTestRepository = {
   findOne: jest.fn(),
   find: jest.fn(),
 };
+
+const USER = [...USER_LIST][0];
 
 describe('TasksService', () => {
   let service: TasksService;
@@ -45,15 +48,18 @@ describe('TasksService', () => {
     const createTaskClass = new Task();
     Object.assign(createTaskClass, createTaskDto);
 
-    const task: Task = generateTask({ ...createTaskDto });
+    const task: Task = generateTask({ ...createTaskDto }, { ...USER });
 
     jest.spyOn(mockTestRepository, 'create').mockReturnValue(createTaskDto);
     jest.spyOn(mockTestRepository, 'save').mockReturnValue(task);
 
-    const result = await service.createTask(createTaskDto);
+    const result = await service.createTask(createTaskDto, { ...USER });
 
     expect(mockTestRepository.create).toHaveBeenCalled();
-    expect(mockTestRepository.create).toHaveBeenCalledWith(createTaskDto);
+    expect(mockTestRepository.create).toHaveBeenCalledWith({
+      ...createTaskDto,
+      user: USER,
+    });
 
     expect(mockTestRepository.save).toHaveBeenCalled();
     expect(mockTestRepository.save).toHaveBeenCalledWith(createTaskClass);
@@ -65,10 +71,13 @@ describe('TasksService', () => {
     let oldTask: Task;
     let idTask: string;
     beforeEach(() => {
-      oldTask = generateTask({
-        title: 'Old title',
-        isCompleted: false,
-      });
+      oldTask = generateTask(
+        {
+          title: 'Old title',
+          isCompleted: false,
+        },
+        { ...USER },
+      );
 
       idTask = oldTask.id;
     });
@@ -86,11 +95,14 @@ describe('TasksService', () => {
       jest.spyOn(mockTestRepository, 'findOne').mockReturnValue(oldTask);
       jest.spyOn(mockTestRepository, 'save').mockReturnValue(newTask);
 
-      const result = await service.updateTask(idTask, updateTaskDto);
+      const result = await service.updateTask(idTask, updateTaskDto, {
+        ...USER,
+      });
 
       expect(mockTestRepository.findOne).toHaveBeenCalled();
       expect(mockTestRepository.findOne).toHaveBeenCalledWith({
         where: { id: idTask },
+        relations: ['user'],
       });
 
       expect(mockTestRepository.save).toHaveBeenCalled();
@@ -112,11 +124,14 @@ describe('TasksService', () => {
       jest.spyOn(mockTestRepository, 'findOne').mockReturnValue(oldTask);
       jest.spyOn(mockTestRepository, 'save').mockReturnValue(newTask);
 
-      const result = await service.updateTask(idTask, updateTaskDto);
+      const result = await service.updateTask(idTask, updateTaskDto, {
+        ...USER,
+      });
 
       expect(mockTestRepository.findOne).toHaveBeenCalled();
       expect(mockTestRepository.findOne).toHaveBeenCalledWith({
         where: { id: idTask },
+        relations: ['user'],
       });
 
       expect(mockTestRepository.save).toHaveBeenCalled();
@@ -136,7 +151,7 @@ describe('TasksService', () => {
       jest.spyOn(mockTestRepository, 'save');
 
       expect(async () => {
-        await service.updateTask('falseId', updateTaskDto);
+        await service.updateTask('falseId', updateTaskDto, { ...USER });
       }).rejects.toThrow(NotFoundException);
 
       expect(mockTestRepository.findOne).toHaveBeenCalled();
@@ -150,10 +165,17 @@ describe('TasksService', () => {
 
   it('Should delete task by id', async () => {
     const idTask = 'TestId';
+    const createTaskDto: CreateTaskDto = {
+      isCompleted: false,
+      title: 'Test title',
+    };
+    const taskTest: Task = generateTask({ ...createTaskDto }, { ...USER });
 
     jest.spyOn(mockTestRepository, 'delete');
 
-    await service.deleteTask(idTask);
+    mockTestRepository.findOne.mockResolvedValue({ ...taskTest, user: USER });
+
+    await service.deleteTask(idTask, { ...USER });
 
     expect(mockTestRepository.delete).toHaveBeenCalled();
     expect(mockTestRepository.delete).toHaveBeenCalledWith(idTask);
@@ -161,14 +183,14 @@ describe('TasksService', () => {
 
   it('Should get all task', async () => {
     const taskList = [
-      generateTask({ title: 'Title 1', isCompleted: false }),
-      generateTask({ title: 'Title 2', isCompleted: true }),
-      generateTask({ title: 'Title 3', isCompleted: false }),
+      generateTask({ title: 'Title 1', isCompleted: false }, { ...USER }),
+      generateTask({ title: 'Title 2', isCompleted: true }, { ...USER }),
+      generateTask({ title: 'Title 3', isCompleted: false }, { ...USER }),
     ];
 
     jest.spyOn(mockTestRepository, 'find').mockReturnValue(taskList);
 
-    const result = await service.getTasks();
+    const result = await service.getTasks({ ...USER });
 
     expect(mockTestRepository.find).toHaveBeenCalled();
     expect(result).toEqual(taskList);

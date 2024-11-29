@@ -79,6 +79,7 @@ describe('UserService', () => {
         email: 'old_email@emai.com',
         password: 'old_password',
         username: 'old_username',
+        tasks: [],
       };
 
       idUser = oldUser.id;
