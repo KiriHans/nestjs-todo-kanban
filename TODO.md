@@ -8,5 +8,6 @@
 - [x] Delete tasks
 - [x] Authentication (cookies)
 - [] Add One-to-Many relationship user-task
+  - [] Add Authorization for tasks
 - [] validate requests from user
 - [] Rate-limiting
